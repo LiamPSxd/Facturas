@@ -1,5 +1,6 @@
 package com.uv.factura;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,65 +22,92 @@ public class FacturaApplication{
 
 	@RequestMapping(value = "/facturas", method = RequestMethod.GET)
 	public String getFacturas(){
-		Iterable<Factura> facturas = ifactura.findAll();
+		String result = "{\"status\": \"Failed\"}";
 
-		if(facturas != null){
-			String result = "{\"status\": \"Success\", \"data\": [";
+		try{
+			Iterable<Factura> facturas = ifactura.findAll();
 
-			for(Factura factura : facturas){
-				result = result + "{" + factura.toString() + "}, ";
+			if(facturas != null){
+				result = "{\"status\": \"Success\", \"data\": [";
+	
+				for(Factura factura : facturas)
+					result = result + "{" + factura.toString() + "}, ";
+	
+				result = result + "]}";
 			}
+		}catch(Exception e){}
 
-			result = result + "]}";
-			return result;
-		}else return "{\"status\": \"Failed\"}";
+		return new JSONObject(result).toString();
 	}
 
 	@RequestMapping(value = "/facturas/{id}", method = RequestMethod.GET)
 	public String getFactura(@PathVariable Integer id){
-		Factura factura = ifactura.findById(id).get();
+		
+		String result = "{\"status\": \"Failed\"}";
 
-		if(factura != null){
-			return "{\"status\": \"Success\", \"data\": {" + factura.toString() + "}}";
-		}else return "{\"status\": \"Failed\"}";
+		try{
+			Factura factura = ifactura.findById(id).get();
+
+			if(factura != null)
+			result = "{\"status\": \"Success\", \"data\": {" + factura.toString() + "}}";
+		}catch(Exception e){}
+
+		return new JSONObject(result).toString();
 	}
 
 	@RequestMapping(value = "/facturas", method = RequestMethod.POST)
 	public String postFactura(@RequestBody Factura factura){
-		if(factura != null){
-			ifactura.save(factura);
-			return "{\"status\": \"Success\"}";
-		}return "{\"status\": \"Failed\"}";
+		String result = "{\"status\": \"Failed\"}";
+
+		try{
+			if(factura != null){
+				ifactura.save(factura);
+				result = "{\"status\": \"Success\"}";
+			}
+		}catch(Exception e){}
+
+		return new JSONObject(result).toString();
 	}
 
 	@RequestMapping(value = "/facturas/{id}", method = RequestMethod.PUT)
 	public String putFactura(@PathVariable Integer id, @RequestBody Factura factura){
-		if(factura != null){
-			Factura newFactura = ifactura.findById(id).get();
+		String result = "{\"status\": \"Failed\"}";
 
-			if(newFactura != null){
-				newFactura.setId(factura.getId());
-				newFactura.setIdCamion(factura.getIdCamion());
-				newFactura.setCarga(factura.getCarga());
-				newFactura.setFecha(factura.getFecha());
-				newFactura.setHora(factura.getHora());
-				newFactura.setNombreChofer(factura.getNombreChofer());
-				newFactura.setNombreReceptor(factura.getNombreReceptor());
-				ifactura.save(newFactura);
+		try{
+			if(factura != null){
+				Factura newFactura = ifactura.findById(id).get();
+	
+				if(newFactura != null){
+					newFactura.setId(factura.getId());
+					newFactura.setIdCamion(factura.getIdCamion());
+					newFactura.setCarga(factura.getCarga());
+					newFactura.setFecha(factura.getFecha());
+					newFactura.setHora(factura.getHora());
+					newFactura.setNombreChofer(factura.getNombreChofer());
+					newFactura.setNombreReceptor(factura.getNombreReceptor());
+					ifactura.save(newFactura);
+	
+					result = "{\"status\": \"Success\", \"data\": {" + factura.toString() + "}}";
+				}
+			}
+		}catch(Exception e){}
 
-				return "{\"status\": \"Success\", \"data\": {" + factura.toString() + "}}";
-			}else return "{\"status\": \"Failed\"}";
-		}else return "{\"status\": \"Failed\"}";
+		return new JSONObject(result).toString();
 	}
 
 	@RequestMapping(value = "/facturas/{id}", method = RequestMethod.DELETE)
 	public String deleteFactura(@PathVariable Integer id){
-		Factura factura = ifactura.findById(id).get();
+		String result = "{\"status\": \"Failed\"}";
 
-		if(factura != null){
-			ifactura.delete(factura);
+		try{
+			Factura factura = ifactura.findById(id).get();
 
-			return "{\"status\": \"Success\"}";
-		}else return "{\"status\": \"Failed\"}";
+			if(factura != null){
+				ifactura.delete(factura);
+				result = "{\"status\": \"Success\"}";
+			}
+		}catch(Exception e){}
+
+		return new JSONObject(result).toString();
 	}
 }
