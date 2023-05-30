@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.json.JSONObject;
+
 @Entity
 public class Factura{
     @Id
@@ -75,5 +77,17 @@ public class Factura{
 
     public String toString(){
         return "\"id\": \"" + this.getId() + "\", \"idCamion\": \"" + this.getIdCamion() + "\", \"carga\": \"" + this.getCarga() + "\", \"fecha\": \"" + this.getFecha() + "\", \"hora\": \"" + this.getHora() + "\", \"nombreChofer\": \"" + this.getNombreChofer() + "\", \"nombreReceptor\": \"" + this.getNombreReceptor() + "\"";
+    }
+
+    public JSONObject toJson(){
+        JSONObject stringJson = new JSONObject();
+        stringJson.put("id", this.getId());
+         stringJson.put("idCamion",this.getIdCamion());
+         stringJson.put("carga",this.getCarga());
+         stringJson.put("fecha", this.getFecha());
+         stringJson.put("hora", this.getHora());
+         stringJson.put("nombreChofer", this.getNombreChofer());
+         stringJson.put("nombreReceptor",this.getNombreReceptor());
+         return stringJson;
     }
 }
