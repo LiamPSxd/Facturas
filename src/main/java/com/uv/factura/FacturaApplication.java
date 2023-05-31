@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+//Anotación para permitir solicitudes de cualquier origen (CORS)
 @CrossOrigin(origins = "*", maxAge = 3600)
+//Clase RestController que define los recursos que el servicio va a ofrecer
 @RestController
 @SpringBootApplication
 public class FacturaApplication{
@@ -25,6 +27,9 @@ public class FacturaApplication{
 		SpringApplication.run(FacturaApplication.class, args);
 	}
 
+	/*Recurso que recupera los datos de todas las facturas registrados en la base de datos. Los almacena en un 
+	Array<JSON> y los regresa junto a un estado de la petición
+	*/
 	@RequestMapping(value = "/facturas", method = RequestMethod.GET)
 	public String getFacturas(){
 		JSONObject respuesta = new JSONObject();
@@ -45,6 +50,9 @@ public class FacturaApplication{
 		return respuesta.toString();
 	}
 	
+	/*Recurso que recupera los datos de una factura registrada en la base de datos. Toma el id del recurso 
+	y regresa sus datos en un formato JSON junto a un estado de la petición
+	*/
 	@RequestMapping(value = "/facturas/{id}", method = RequestMethod.GET)
 	public String getFactura(@PathVariable Integer id){
 		JSONObject respuesta = new JSONObject();
@@ -61,6 +69,9 @@ public class FacturaApplication{
 		return respuesta.toString();
 	}
 	
+	/*Recurso que registra los datos de una factura en la base de datos. Toma el objeto factura del cuerpo de la petición
+	y tras procesarlos regresa el estado de la petición;
+	*/
 	@RequestMapping(value = "/facturas", method = RequestMethod.POST)
 	public String postFactura(@RequestBody Factura factura){
 		JSONObject respuesta = new JSONObject();
@@ -75,6 +86,9 @@ public class FacturaApplication{
 		return respuesta.toString();
 	}
 
+	/*Recurso que actualiza los datos de una factura en la base de datos. Toma el objeto factura del cuerpo de la petición
+	y tras procesarlos regresa el estado de la petición;
+	*/
 	@RequestMapping(value = "/facturas/{id}", method = RequestMethod.PUT)
 	public String putFactura(@PathVariable Integer id, @RequestBody Factura factura){
 		JSONObject respuesta = new JSONObject();
@@ -100,6 +114,8 @@ public class FacturaApplication{
 		return respuesta.toString();
 	}
 
+	/*Recurso que elimina los datos de una factura registrada en la base de datos. Toma el id del recurso 
+	y tras procesarlo regresa el estado de la petición*/
 	@RequestMapping(value = "/facturas/{id}", method = RequestMethod.DELETE)
 	public String deleteFactura(@PathVariable Integer id){
 		JSONObject respuesta = new JSONObject();

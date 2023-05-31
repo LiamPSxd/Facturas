@@ -7,6 +7,7 @@ import javax.persistence.Id;
 
 import org.json.JSONObject;
 
+//Clase Factura que sirve de apoyo para guardar los datos de las entidades que se registrarán.
 @Entity
 public class Factura{
     @Id
